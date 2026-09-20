@@ -27,6 +27,29 @@ it happened on the same page objects the stock collectors listen to.
 Requires Node 20.19+ or 22.12+, Chrome, and a TypeSafe API key from
 [console.typesafe.ai](https://console.typesafe.ai/settings/keys).
 
+### Claude Code plugin
+
+Two commands inside a session:
+
+```text
+/plugin marketplace add rashedInt32/jev-reach
+/plugin install jev-reach@jev-reach
+```
+
+The plugin runs the published package through `npx -y jev-reach@<version> --isolated`.
+It registers a server named `chrome-devtools` that includes every stock devtools
+tool plus `reach`, so remove your existing chrome-devtools-mcp entry first.
+Keeping both gives you two Chromes and two copies of every tool:
+
+```bash
+claude mcp remove chrome-devtools
+```
+
+The key must reach the server. Put it in `~/.config/typesafe/key` with mode 0600,
+or export `TYPESAFE_API_KEY` in the shell that starts Claude Code.
+
+### Any MCP client
+
 Replace your chrome-devtools-mcp entry with jev-reach and keep the flags:
 
 ```bash

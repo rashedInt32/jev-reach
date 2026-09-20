@@ -1,0 +1,28 @@
+{
+  "name": "jev-reach",
+  "description": "chrome-devtools-mcp with a Jev-driven reach tool for coding agents.",
+  "owner": {
+    "name": "rashed parvez",
+    "url": "https://github.com/rashedInt32"
+  },
+  "plugins": [
+    {
+      "name": "jev-reach",
+      "source": "./",
+      "displayName": "Jev Reach",
+      "description": "chrome-devtools-mcp plus one tool: reach. Jev walks the browser to the spot in one call, then you make one devtools call there.",
+      "version": "0.1.0",
+      "homepage": "https://github.com/rashedInt32/jev-reach",
+      "repository": "https://github.com/rashedInt32/jev-reach",
+      "license": "MIT",
+      "keywords": [
+        "mcp",
+        "chrome-devtools",
+        "browser",
+        "typesafe",
+        "jev"
+      ],
+      "category": "productivity"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "jev-reach",
+  "displayName": "Jev Reach",
+  "description": "chrome-devtools-mcp plus one tool: reach. Jev walks the browser to the spot in one call, then you make one devtools call there. Same Chrome, same console and network, every stock devtools tool included.",
+  "version": "0.1.0",
+  "author": {
+    "name": "rashed parvez"
+  },
+  "homepage": "https://github.com/rashedInt32/jev-reach",
+  "repository": "https://github.com/rashedInt32/jev-reach",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "chrome-devtools",
+    "browser",
+    "typesafe",
+    "jev",
+    "system-one",
+    "agent"
+  ],
+  "mcpServers": {
+    "chrome-devtools": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "jev-reach@0.1.0",
+        "--isolated"
+      ]
+    }
+  }
+}
