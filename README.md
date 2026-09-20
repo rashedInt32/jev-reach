@@ -48,8 +48,21 @@ Any MCP client:
 }
 ```
 
-Every chrome-devtools-mcp flag is accepted. `--isolated` gives each agent session
-its own Chrome. The key can also live in `~/.config/typesafe/key` with mode 0600.
+Every chrome-devtools-mcp flag is accepted and none is required. `--isolated` is
+only the example because it gives each agent session its own throwaway Chrome.
+The other stock modes work the same way, verified with the same walk:
+
+| mode | flags | what reach walks |
+|---|---|---|
+| isolated | `--isolated` | a fresh Chrome per session, temp profile |
+| persistent | no flag | the stock profile in `~/.cache/chrome-devtools-mcp`, logins kept |
+| attach | `--browserUrl http://127.0.0.1:9222` or `--autoConnect` | your own running Chrome |
+
+The stock rule applies: one server per persistent profile at a time. Running a
+second session against the same profile fails with the stock "browser is
+already running" error, which is what `--isolated` is for.
+
+The key can also live in `~/.config/typesafe/key` with mode 0600.
 
 ## Use
 
