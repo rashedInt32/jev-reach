@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fixture home</title>
+    <style>
+      body { font-family: sans-serif; margin: 2rem; }
+      #consent { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: flex; align-items: center; justify-content: center; }
+      #consent .card { background: #fff; padding: 2rem; border-radius: 8px; }
+      nav a { margin-right: 1rem; }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/pricing.html">Pricing</a>
+      <a href="/settings.html">Settings</a>
+      <a href="/checkout.html">Place order</a>
+    </nav>
+    <h1>Fixture home</h1>
+    <p>A tiny site for jev-reach tests.</p>
+    <button id="promo">See promotion</button>
+
+    <div id="consent" role="dialog" aria-label="Cookie consent">
+      <div class="card">
+        <p>We use cookies.</p>
+        <button id="accept">Accept all cookies</button>
+        <button id="decline">Decline</button>
+      </div>
+    </div>
+
+    <script>
+      console.log("home-loaded");
+      for (const id of ["accept", "decline"]) {
+        document.getElementById(id).addEventListener("click", () => {
+          document.getElementById("consent").remove();
+          console.log("cookie-dismissed:" + id);
+        });
+      }
+      document.getElementById("promo").addEventListener("click", () => console.log("promo-clicked"));
+    </script>
+  </body>
+</html>
