@@ -64,6 +64,7 @@ const { parseArguments } = await import("chrome-devtools-mcp/build/src/config/mc
 const { closeBrowser } = await import("chrome-devtools-mcp/build/src/browser.js");
 const { StdioServerTransport } = await import("chrome-devtools-mcp/build/src/third_party/index.js");
 const { registerReach } = await import("./reach.js");
+const { patchStockNavigation } = await import("./tabs.js");
 
 // ── Wire-up, mirroring the stock entrypoint ─────────────────────────────────
 
@@ -92,6 +93,7 @@ process.on("SIGHUP", () => void shutdown("SIGHUP"));
 
 const server = await McpServer.from(args, {});
 registerReach(server.server, args);
+patchStockNavigation(server.server);
 await server.connect(new StdioServerTransport());
 console.error(`[jev-reach] ${OUR_VERSION} ready on chrome-devtools-mcp ${DEVTOOLS_VERSION}; tool 'reach' added`);
 logDisclaimers(args);

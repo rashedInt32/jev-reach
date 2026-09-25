@@ -228,6 +228,37 @@ export function parseSelectedPage(text: string): ListedPage | null {
   return parsePages(text).find((p) => p.selected) ?? null;
 }
 
+// ── Stock navigation ────────────────────────────────────────────────────────
+
+/**
+ * Navigation budget for stock `new_page` and `navigate_page` calls that set no
+ * timeout. The stock default is 10 s, which a dev server compiling a route on
+ * first hit often misses: the page still loads, but the caller sees an error
+ * and navigates again.
+ */
+export const DEFAULT_NAV_TIMEOUT_MS = 30_000;
+
+/**
+ * The id of the tab a `new_page` call should load into instead of opening a
+ * second one, or null to open a new tab as usual.
+ *
+ * Chrome starts with one `about:blank` tab, so a first `new_page` otherwise
+ * leaves that tab idle and puts the URL in tab 2. Reuse only applies when the
+ * blank tab is the only page and sits in the default context: a call naming an
+ * `isolatedContext` wants its own cookies and storage, and a background call
+ * must not take over the foreground tab.
+ */
+export function blankTabToReuse(listText: string, params: { isolatedContext?: unknown; background?: unknown }): number | null {
+  if (params.isolatedContext || params.background) return null;
+  const lines = listText
+    .split("\n")
+    .map((l) => l.trim())
+    .filter((l) => /^\d+:\s/.test(l));
+  if (lines.length !== 1 || /\sisolatedContext=\S+$/.test(lines[0] as string)) return null;
+  const [page] = parsePages(lines[0] as string);
+  return page?.url === "about:blank" ? page.id : null;
+}
+
 // ── Step decision ───────────────────────────────────────────────────────────
 
 export type Action = "click" | "type" | "select" | "scroll_down" | "scroll_up" | "back" | "wait" | "done";

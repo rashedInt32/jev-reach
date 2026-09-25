@@ -155,3 +155,39 @@ test("live: the real Jev signs in with supplied values and lands on Settings", l
     await site.close();
   }
 });
+
+test("new_page on a fresh browser loads into the blank start tab", gated, async () => {
+  const site = await startFixture();
+  try {
+    await withClient({ args: ARGS }, async (client) => {
+      const opened = await client.callTool({ name: "new_page", arguments: { url: `${site.url}/` } });
+      assert.notEqual(opened.isError, true, textOf(opened));
+      assert.match(textOf(opened), /Loaded in blank tab 1/);
+      const pages = textOf(await client.callTool({ name: "list_pages", arguments: {} }));
+      assert.doesNotMatch(pages, /about:blank/, pages);
+      assert.match(pages, /^1: .*\[selected\]/m, pages);
+      assert.doesNotMatch(pages, /^2:/m, pages);
+      const second = await client.callTool({ name: "new_page", arguments: { url: `${site.url}/settings.html` } });
+      assert.doesNotMatch(textOf(second), /Loaded in blank tab/);
+      assert.match(textOf(second), /^2: /m, "a second new_page still opens a new tab");
+    });
+  } finally {
+    await site.close();
+  }
+});
+
+test("new_page with an isolatedContext never takes the blank tab", gated, async () => {
+  const site = await startFixture();
+  try {
+    await withClient({ args: ARGS }, async (client) => {
+      const opened = await client.callTool({ name: "new_page", arguments: { url: `${site.url}/`, isolatedContext: "tenant-a" } });
+      assert.notEqual(opened.isError, true, textOf(opened));
+      assert.doesNotMatch(textOf(opened), /Loaded in blank tab/);
+      const pages = textOf(await client.callTool({ name: "list_pages", arguments: {} }));
+      assert.match(pages, /^1: about:blank/m, pages);
+      assert.match(pages, /^2: .*isolatedContext=tenant-a/m, pages);
+    });
+  } finally {
+    await site.close();
+  }
+});

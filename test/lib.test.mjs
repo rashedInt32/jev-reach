@@ -3,6 +3,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  blankTabToReuse,
   bindingSatisfied,
   buildBindingOptions,
   chunk,
@@ -186,4 +187,14 @@ test("Mutex serialises", async () => {
   });
   await Promise.all([a, b]);
   assert.deepEqual(order, ["a-start", "a-end", "b"]);
+});
+
+test("blankTabToReuse reuses only a lone blank tab in the default context", () => {
+  assert.equal(blankTabToReuse("## Pages\n1: about:blank [selected]", {}), 1);
+  assert.equal(blankTabToReuse("## Pages\n1: about:blank [selected]", { isolatedContext: "tenant-a" }), null);
+  assert.equal(blankTabToReuse("## Pages\n1: about:blank [selected]", { background: true }), null);
+  assert.equal(blankTabToReuse("## Pages\n1: about:blank [selected] isolatedContext=tenant-a", {}), null);
+  assert.equal(blankTabToReuse("## Pages\n1: about:blank\n2: Home (https://a.test/) [selected]", {}), null);
+  assert.equal(blankTabToReuse("## Pages\n1: Home (https://a.test/) [selected]", {}), null);
+  assert.equal(blankTabToReuse("nothing here", {}), null);
 });
